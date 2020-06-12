@@ -306,7 +306,7 @@ def rUnitTests() {
                          ${getGradleCommand(config)} :sparkling-water-r:test -x check -PbackendMode=${config.backendMode}
                          """
                 } finally {
-                    sh "cat r/build/rsparkling.Rcheck/tests/testthat.Rout"
+                    sh "cat r/build/rsparkling.Rcheck/tests/testthat.Rout.fail"
                     arch '**/build/*tests.log,**/*.log, **/out.*, **/stdout, **/stderr, **/build/**/*log*, **/build/reports/'
                 }
             }
