@@ -20,6 +20,10 @@ package ai.h2o.sparkling.backend.utils
 import java.io._
 import java.net.{HttpURLConnection, URI, URL}
 
+// writing to file
+import java.io.PrintWriter
+import java.time.LocalDateTime
+
 import ai.h2o.sparkling.H2OConf
 import ai.h2o.sparkling.backend.NodeDesc
 import ai.h2o.sparkling.backend.exceptions._
@@ -166,6 +170,15 @@ trait RestCommunication extends Logging with RestEncodingUtils {
       encodeParamsAsJson: Boolean = false): ResultType = {
     withResource(readURLContent(endpoint, requestType, suffix, conf, params, encodeParamsAsJson, None)) { response =>
       val content = IOUtils.toString(response)
+
+      // The deserialize methods throws an error but the json contents of the `contents` val
+      // seem fine. Exporting to json be analyzed.
+      if content.contains("GridSchemaV99") {
+        val writer = new PrintWriter("/grid-search-output/grid-search-report" +  LocalDateTime.now() + ".json") { 
+          write(content); close 
+        }
+      }
+
       deserialize[ResultType](content, skippedFields)
     }
   }
